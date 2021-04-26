@@ -1,5 +1,5 @@
 from discord.ext import commands
-from discord import Member
+from discord import Member, Embed
 import os
 import traceback
 
@@ -22,7 +22,7 @@ class Greetings(commands.Cog):
         if message.author == self.bot.user:
             return
         if message.content.startswith('Hello darkness'):
-            embed = discord.Embed(title='',
+            embed = Embed(title='',
                               description='',
                               colour=0x000000)
             embed.set_image(url='https://i.imgur.com/OsnmPRA.jpeg')
