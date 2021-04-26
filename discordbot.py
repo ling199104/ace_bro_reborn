@@ -14,6 +14,19 @@ class Greetings(commands.Cog):
         channel = member.guild.system_channel
         if channel is not None:
             await channel.send('Welcome {0.mention}.'.format(member))
+    
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        channel = message.channel
+        # we do not want the bot to reply to itself
+        if message.author == self.bot.user:
+            return
+        if message.content.startswith('Hello darkness'):
+            embed = discord.Embed(title='',
+                              description='',
+                              colour=0x000000)
+            embed.set_image(url='https://i.imgur.com/OsnmPRA.jpeg')
+            await channel.send(content="I've come to talk with you again", embed=embed)
 
     @commands.command()
     async def hello(self, ctx, *, member: Member = None):
