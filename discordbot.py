@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord import Member
 import os
 import traceback
 
@@ -15,7 +16,7 @@ class Greetings(commands.Cog):
             await channel.send('Welcome {0.mention}.'.format(member))
 
     @commands.command()
-    async def hello(self, ctx, *, member: discord.Member = None):
+    async def hello(self, ctx, *, member: Member = None):
         """Says hello"""
         member = member or ctx.author
         if self._last_member is None or self._last_member.id != member.id:
