@@ -71,7 +71,7 @@ class Greetings(commands.Cog):
 #             await self.join(ctx, voice)
 #             voice_client: discord.VoiceClient = discord.utils.get(self.bot.voice_clients, guild=guild)
 #             voice_client.play(FFmpegPCMAudio(f, **FFMPEG_OPTS), after=lambda e: print('done', e))
-            voice.play(fp)
+            voice.play(FFmpegPCMAudio(fp, **FFMPEG_OPTS), after=lambda e: print('done', e))
             voice.is_playing()
             fp.close()
             
