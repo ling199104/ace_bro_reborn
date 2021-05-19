@@ -43,7 +43,7 @@ class Greetings(commands.Cog):
         
         
     @commands.command()
-    async def tts(self, ctx, *, member: Member = None):
+    async def hi(self, ctx, *, member: Member = None):
         member = member or ctx.author
         if self._last_member is None or self._last_member.id != member.id:
             await ctx.send("This is a tts message", tts=True)
