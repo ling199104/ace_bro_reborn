@@ -1,7 +1,10 @@
 from discord.ext import commands
-from discord import Member, Embed
+from discord.utils import get
+from discord import Member, Embed, FFmpegPCMAudio
 import os
 import traceback
+from gtts import gTTS
+from tempfile import TemporaryFile
 
 
 class Greetings(commands.Cog):
@@ -37,6 +40,40 @@ class Greetings(commands.Cog):
         else:
             await ctx.send('Hello {0.name}... This feels familiar.'.format(member))
         self._last_member = member
+        
+        
+    @commands.command()
+    async def tts(self, ctx, *, member: Member = None):
+        member = member or ctx.author
+        if self._last_member is None or self._last_member.id != member.id:
+            await ctx.send("This is a tts message", tts=True)
+        else:
+            tts = gTTS(text='Hello', lang='en')
+            f = TemporaryFile()
+            tts.write_to_fp(f)
+            
+            FFMPEG_OPTS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+
+            voice = get(bot.voice_clients, guild=ctx.guild)
+
+            await join(ctx, voice)
+            
+
+            voice.play(FFmpegPCMAudio(f, **FFMPEG_OPTS), after=lambda e: print('done', e))
+            voice.is_playing()
+            f.close()
+            
+        self._last_member = member
+        
+    
+    @commands.command()
+    async def join(self, ctx, voice):
+        channel = ctx.author.voice.channel
+
+        if voice and voice.is_connected():
+            await voice.move_to(channel)
+        else:
+            voice = await channel.connect() 
 
         
 bot = commands.Bot(command_prefix='/')
