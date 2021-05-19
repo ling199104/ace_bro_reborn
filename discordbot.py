@@ -53,8 +53,22 @@ class Greetings(commands.Cog):
             tts.write_to_fp(f)
             
             FFMPEG_OPTS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-            await self.join(ctx, voice)
-            voice = get(bot.voice_clients, guild=ctx.guild)
+            guild = ctx.guild
+            if guild.me.voice != None: # if bot is in any voice channel
+                voice_client: discord.VoiceClient = get(self.bot.voice_clients, guild=guild)
+                await voice_client.disconnect()
+                if ctx.message.author.voice != None: # message's author is in a voice channel
+                    channel = ctx.message.author.voice.channel
+                    await channel.connect()
+            else: # bot is not in any voice channel
+                if ctx.message.author.voice != None: # message's author is in a voice channel
+                    channel = ctx.message.author.voice.channel
+                    await channel.connect()
+
+            voice = get(self.bot.voice_clients, guild=ctx.guild)
+#             await self.join(ctx, voice)
+#             voice_client: discord.VoiceClient = discord.utils.get(self.bot.voice_clients, guild=guild)
+#             voice_client.play(FFmpegPCMAudio(f, **FFMPEG_OPTS), after=lambda e: print('done', e))
             voice.play(FFmpegPCMAudio(f, **FFMPEG_OPTS), after=lambda e: print('done', e))
             voice.is_playing()
             f.close()
