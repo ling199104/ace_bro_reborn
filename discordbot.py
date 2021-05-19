@@ -53,12 +53,8 @@ class Greetings(commands.Cog):
             tts.write_to_fp(f)
             
             FFMPEG_OPTS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-
-            voice = get(bot.voice_clients, guild=ctx.guild)
-
             await self.join(ctx, voice)
-            
-
+            voice = get(bot.voice_clients, guild=ctx.guild)
             voice.play(FFmpegPCMAudio(f, **FFMPEG_OPTS), after=lambda e: print('done', e))
             voice.is_playing()
             f.close()
