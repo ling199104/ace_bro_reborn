@@ -56,7 +56,7 @@ class Greetings(commands.Cog):
 
             voice = get(bot.voice_clients, guild=ctx.guild)
 
-            await join(ctx, voice)
+            await self.join(ctx, voice)
             
 
             voice.play(FFmpegPCMAudio(f, **FFMPEG_OPTS), after=lambda e: print('done', e))
