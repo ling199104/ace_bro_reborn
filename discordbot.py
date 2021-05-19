@@ -52,7 +52,7 @@ class Greetings(commands.Cog):
             fp = BytesIO()
             tts.write_to_fp(fp)
             fp.seek(0)
-            buffered_io_base = io.BufferedIOBase(fp)
+            buffered_io_base = BufferedIOBase(fp)
             
             FFMPEG_OPTS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
             guild = ctx.guild
