@@ -56,8 +56,9 @@ class Greetings(commands.Cog):
             FFMPEG_OPTS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
             guild = ctx.guild
             if guild.me.voice != None: # if bot is in any voice channel
-                channel = ctx.message.author.voice.channel
-                await channel.disconnect()
+                for x in self.bot.voice_clients:
+                    if(x.guild == ctx.message.author.guild):
+                        return await x.disconnect()
                 if ctx.message.author.voice != None: # message's author is in a voice channel
                     channel = ctx.message.author.voice.channel
                     await channel.connect()
