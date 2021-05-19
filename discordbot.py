@@ -4,7 +4,7 @@ from discord import Member, Embed, FFmpegPCMAudio
 import os
 import traceback
 from gtts import gTTS
-from tempfile import TemporaryFile
+from io import BytesIO
 
 
 class Greetings(commands.Cog):
@@ -49,8 +49,9 @@ class Greetings(commands.Cog):
             await ctx.send("This is a tts message", tts=True)
         else:
             tts = gTTS(text='Hello', lang='en')
-            f = TemporaryFile()
-            tts.write_to_fp(f)
+            fp = BytesIO()
+            tts.write_to_fp(fp)
+            fp.seek(0)
             
             FFMPEG_OPTS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
             guild = ctx.guild
@@ -69,7 +70,7 @@ class Greetings(commands.Cog):
 #             await self.join(ctx, voice)
 #             voice_client: discord.VoiceClient = discord.utils.get(self.bot.voice_clients, guild=guild)
 #             voice_client.play(FFmpegPCMAudio(f, **FFMPEG_OPTS), after=lambda e: print('done', e))
-            voice.play(FFmpegPCMAudio(f, **FFMPEG_OPTS), after=lambda e: print('done', e))
+            voice.play(FFmpegPCMAudio(fp, **FFMPEG_OPTS), after=lambda e: print('done', e))
             voice.is_playing()
             f.close()
             
